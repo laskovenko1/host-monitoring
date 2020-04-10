@@ -13,18 +13,17 @@ public class CPUMonitorTest {
     public void getCpuUsageTest() {
         CPUMonitor monitor = new CPUMonitorImpl();
         Map<String, Double> cpuUsage = monitor.getCpuUsage();
-        assertTrue(cpuUsage.containsKey("ALL"));
-        assertProcessorsNum(cpuUsage.size() - 1);
+        assertTrue(cpuUsage.containsKey("-1"));
+
+        int expectedProcessorsNum = Runtime.getRuntime().availableProcessors();
+        cpuUsage.remove("-1");
+        assertEquals(expectedProcessorsNum, cpuUsage.size());
     }
 
     @Test
-    public void getCpuNumberTest() {
+    public void getNumberOfCores() {
         CPUMonitor monitor = new CPUMonitorImpl();
-        assertProcessorsNum(monitor.getCpuNumber());
-    }
-
-    private void assertProcessorsNum(int actual) {
         int expectedProcessorsNum = Runtime.getRuntime().availableProcessors();
-        assertEquals(expectedProcessorsNum, actual);
+        assertEquals(expectedProcessorsNum, monitor.getNumberOfCores());
     }
 }

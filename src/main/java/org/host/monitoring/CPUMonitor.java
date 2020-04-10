@@ -6,5 +6,5 @@ public interface CPUMonitor {
 
     Map<String, Double> getCpuUsage();
 
-    int getCpuNumber();
+    int getNumberOfCores();
 }
