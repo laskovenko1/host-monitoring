@@ -1,4 +1,6 @@
-package org.host.monitoring;
+package hsm.monitors.platform.linux;
+
+import hsm.monitors.CPUMonitor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class CPUMonitorImpl implements CPUMonitor {
+public class LinuxCPUMonitor implements CPUMonitor {
 
     public static final String MPSTAT_COMMAND = "mpstat -P ALL 1 1";
     public static final int IDLE_COLUMN_INDEX = 11;

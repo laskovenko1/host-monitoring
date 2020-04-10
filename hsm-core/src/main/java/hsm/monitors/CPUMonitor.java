@@ -1,4 +1,4 @@
-package org.host.monitoring;
+package hsm.monitors;
 
 import java.util.Map;
 

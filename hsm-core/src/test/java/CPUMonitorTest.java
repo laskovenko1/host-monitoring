@@ -1,5 +1,5 @@
-import org.host.monitoring.CPUMonitor;
-import org.host.monitoring.CPUMonitorImpl;
+import hsm.HostStatusMonitor;
+import hsm.monitors.CPUMonitor;
 import org.junit.Test;
 
 import java.util.Map;
@@ -9,10 +9,12 @@ import static org.junit.Assert.assertTrue;
 
 public class CPUMonitorTest {
 
+    private final HostStatusMonitor hostStatusMonitor = new HostStatusMonitor();
+
     @Test
     public void getCpuUsageTest() {
-        CPUMonitor monitor = new CPUMonitorImpl();
-        Map<String, Double> cpuUsage = monitor.getCpuUsage();
+        CPUMonitor cpuMonitor = hostStatusMonitor.getCpuMonitor();
+        Map<String, Double> cpuUsage = cpuMonitor.getCpuUsage();
         assertTrue(cpuUsage.containsKey("-1"));
 
         int expectedProcessorsNum = Runtime.getRuntime().availableProcessors();
@@ -22,8 +24,8 @@ public class CPUMonitorTest {
 
     @Test
     public void getNumberOfCores() {
-        CPUMonitor monitor = new CPUMonitorImpl();
+        CPUMonitor cpuMonitor = hostStatusMonitor.getCpuMonitor();
         int expectedProcessorsNum = Runtime.getRuntime().availableProcessors();
-        assertEquals(expectedProcessorsNum, monitor.getNumberOfCores());
+        assertEquals(expectedProcessorsNum, cpuMonitor.getNumberOfCores());
     }
 }
