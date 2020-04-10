@@ -2,13 +2,13 @@ package hsm;
 
 import hsm.monitors.CPUMonitor;
 import hsm.monitors.MemoryMonitor;
-import hsm.monitors.platform.linux.LinuxCPUMonitor;
-import hsm.monitors.platform.linux.LinuxMemoryMonitor;
+import hsm.monitors.platforms.linux.LinuxCPUMonitor;
+import hsm.monitors.platforms.linux.LinuxMemoryMonitor;
 import org.apache.commons.lang3.SystemUtils;
 
 import java.util.function.Supplier;
 
-public class HostStatusMonitor {
+public final class HostStatusMonitor {
 
     private static final Platform currentPlatform;
 
@@ -19,6 +19,10 @@ public class HostStatusMonitor {
             currentPlatform = Platform.WINDOWS;
         else
             currentPlatform = Platform.UNKNOWN;
+    }
+
+    public static Platform getCurrentPlatform() {
+        return currentPlatform;
     }
 
     private final Supplier<CPUMonitor> cpuMonitor = this::createCpuMonitor;

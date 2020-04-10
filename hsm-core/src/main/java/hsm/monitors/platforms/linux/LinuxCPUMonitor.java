@@ -1,6 +1,7 @@
-package hsm.monitors.platform.linux;
+package hsm.monitors.platforms.linux;
 
 import hsm.monitors.CPUMonitor;
+import hsm.monitors.utils.CommonUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,14 +12,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class LinuxCPUMonitor implements CPUMonitor {
+public final class LinuxCPUMonitor implements CPUMonitor {
 
     public static final String MPSTAT_COMMAND = "mpstat -P ALL 1 1";
     public static final int IDLE_COLUMN_INDEX = 11;
 
     @Override
     public Map<String, Double> getCpuUsage() {
-        Process p = executeCommand(MPSTAT_COMMAND);
+        Process p = CommonUtils.executeCommand(MPSTAT_COMMAND);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
             // 1. Filter lines with average data.
             // 2. Skip table header.
@@ -41,7 +42,7 @@ public class LinuxCPUMonitor implements CPUMonitor {
 
     @Override
     public int getNumberOfCores() {
-        Process p = executeCommand(MPSTAT_COMMAND);
+        Process p = CommonUtils.executeCommand(MPSTAT_COMMAND);
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
             // 1. Filter lines with average data.
             // 2. Skip table header and 'ALL' line.
@@ -64,15 +65,5 @@ public class LinuxCPUMonitor implements CPUMonitor {
         StringBuilder builder = new StringBuilder("CPU Monitor\nCPU\tUsage\n");
         cpuUsage.forEach((p, v) -> builder.append(String.format("%s\t%f\n", p, v)));
         return builder.toString();
-    }
-
-    private Process executeCommand(String command) {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            return runtime.exec(command);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error while executing command: '" + command + "'. " +
-                    "See the inner exception for details", e);
-        }
     }
 }
