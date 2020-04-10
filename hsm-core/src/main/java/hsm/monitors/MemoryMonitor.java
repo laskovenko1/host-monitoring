@@ -1,10 +1,12 @@
 package hsm.monitors;
 
-import java.util.Map;
+import hsm.monitors.memory.MemoryUnit;
+import hsm.monitors.memory.PhysicalMemory;
+import hsm.monitors.memory.VirtualMemory;
 
 public interface MemoryMonitor {
 
-    Map<String, String> getUsedMemory();
+    PhysicalMemory getPhysicalMemory(MemoryUnit unit);
 
-    Map<String, String> getFreeMemory();
+    VirtualMemory getVirtualMemory(MemoryUnit unit);
 }

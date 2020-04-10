@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 public class LinuxCPUMonitorTest {
 
-    private static final HostStatusMonitor hostStatusMonitor = new HostStatusMonitor();
+    private static final CPUMonitor cpuMonitor = new HostStatusMonitor().getCpuMonitor();
 
     @Before
     public void linuxOnly() {
@@ -21,7 +21,6 @@ public class LinuxCPUMonitorTest {
 
     @Test
     public void getCpuUsageTest() {
-        CPUMonitor cpuMonitor = hostStatusMonitor.getCpuMonitor();
         Map<String, Double> cpuUsage = cpuMonitor.getCpuUsage();
         assertTrue(cpuUsage.containsKey("-1"));
 
@@ -32,7 +31,6 @@ public class LinuxCPUMonitorTest {
 
     @Test
     public void getNumberOfCores() {
-        CPUMonitor cpuMonitor = hostStatusMonitor.getCpuMonitor();
         int expectedProcessorsNum = Runtime.getRuntime().availableProcessors();
         assertEquals(expectedProcessorsNum, cpuMonitor.getNumberOfCores());
     }
