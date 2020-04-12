@@ -43,4 +43,10 @@ public class Filesystem {
     public String getMountPoint() {
         return mountPoint;
     }
+
+    @Override
+    public String toString() {
+        return String.format("filesystem: %s\ttype: %s\tsize: %s\tused size: %s\tavailable size: %s\tmount point: %s",
+                name, type, size.toString(), used.toString(), available.toString(), mountPoint);
+    }
 }

@@ -1,14 +1,16 @@
 package hsm.monitors.platforms.linux;
 
-import hsm.monitors.MemoryMonitor;
-import hsm.units.InformationQuantity;
 import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
+import hsm.monitors.MemoryMonitor;
 import hsm.monitors.utils.CommonUtils;
+import hsm.units.InformationQuantity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public final class LinuxMemoryMonitor implements MemoryMonitor {
@@ -21,30 +23,32 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
 
     @Override
     public PhysicalMemory getPhysicalMemory() {
-        String[] memoryInfo = Objects.requireNonNull(getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), PHYSICAL_MEMORY_ID));
-        InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo[USED_COLUMN_INDEX]), null);
-        InformationQuantity available = new InformationQuantity(Long.parseLong(memoryInfo[AVAILABLE_COLUMN_INDEX]), null);
+        List<String> memoryInfo = Objects.requireNonNull(getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), PHYSICAL_MEMORY_ID));
+        InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo.get(USED_COLUMN_INDEX)), null);
+        InformationQuantity available = new InformationQuantity(Long.parseLong(memoryInfo.get(AVAILABLE_COLUMN_INDEX)), null);
         return new PhysicalMemory(used, available);
     }
 
     @Override
     public VirtualMemory getVirtualMemory() {
-        String[] memoryInfo = getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), VIRTUAL_MEMORY_ID);
-        if (memoryInfo == null) {
+        List<String> memoryInfo = getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), VIRTUAL_MEMORY_ID);
+        if (memoryInfo == null)
             return null;
-        }
-        InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo[USED_COLUMN_INDEX]), null);
-        InformationQuantity available = new InformationQuantity(Long.parseLong(memoryInfo[AVAILABLE_COLUMN_INDEX]), null);
+
+        InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo.get(USED_COLUMN_INDEX)), null);
+        InformationQuantity available = new InformationQuantity(Long.parseLong(memoryInfo.get(AVAILABLE_COLUMN_INDEX)), null);
         return new VirtualMemory(used, available);
     }
 
-    private String[] getMemoryInfo(Process process, String memoryTypeId) {
+    private List<String> getMemoryInfo(Process process, String memoryTypeId) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             // 1. Filter lines with (physical/virtual) memory info.
-            // 2. Convert line to array.
+            // 2. Split line.
+            // 3. Collect to list.
             return reader.lines()
                     .filter(line -> line.contains(memoryTypeId))
-                    .map(line -> line.replaceAll(",", ".").split("\\s+"))
+                    .map(line -> line.split("\\s+"))
+                    .map(Arrays::asList)
                     .findFirst()
                     .orElse(null);
         } catch (IOException e) {

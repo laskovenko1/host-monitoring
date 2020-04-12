@@ -1,7 +1,5 @@
 package hsm.units;
 
-import java.text.DecimalFormat;
-
 public class InformationQuantity {
 
     private long bytes;

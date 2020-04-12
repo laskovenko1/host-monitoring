@@ -1,8 +1,10 @@
 package hsm;
 
 import hsm.monitors.CPUMonitor;
+import hsm.monitors.FilesystemMonitor;
 import hsm.monitors.MemoryMonitor;
 import hsm.monitors.platforms.linux.LinuxCPUMonitor;
+import hsm.monitors.platforms.linux.LinuxFilesystemMonitor;
 import hsm.monitors.platforms.linux.LinuxMemoryMonitor;
 import org.apache.commons.lang3.SystemUtils;
 
@@ -27,6 +29,7 @@ public final class HostStatusMonitor {
 
     private final Supplier<CPUMonitor> cpuMonitor = this::createCpuMonitor;
     private final Supplier<MemoryMonitor> memoryMonitor = this::createMemoryMonitor;
+    private final Supplier<FilesystemMonitor> filesystemMonitor = this::createFilesystemMonitor;
 
     public CPUMonitor getCpuMonitor() {
         return cpuMonitor.get();
@@ -34,6 +37,10 @@ public final class HostStatusMonitor {
 
     public MemoryMonitor getMemoryMonitor() {
         return memoryMonitor.get();
+    }
+
+    public FilesystemMonitor getFilesystemMonitor() {
+        return filesystemMonitor.get();
     }
 
     private CPUMonitor createCpuMonitor() {
@@ -49,6 +56,15 @@ public final class HostStatusMonitor {
         switch (currentPlatform) {
             case LINUX:
                 return new LinuxMemoryMonitor();
+            default:
+                throw new UnsupportedOperationException("OS is not supported: " + SystemUtils.OS_NAME);
+        }
+    }
+
+    private FilesystemMonitor createFilesystemMonitor() {
+        switch (currentPlatform) {
+            case LINUX:
+                return new LinuxFilesystemMonitor();
             default:
                 throw new UnsupportedOperationException("OS is not supported: " + SystemUtils.OS_NAME);
         }

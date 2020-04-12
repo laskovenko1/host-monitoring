@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface FilesystemMonitor {
 
-    List<Filesystem> getFilesystems(List<String> types);
+    List<Filesystem> getFilesystems(List<String> fsTypes);
 }
