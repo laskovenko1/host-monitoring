@@ -22,7 +22,7 @@ public class LinuxFilesystemMonitor implements FilesystemMonitor {
     public static final int ONE_K_BLOCKS_COLUMN_INDEX = 2;
     public static final int USED_COLUMN_INDEX = 3;
     public static final int AVAILABLE_COLUMN_INDEX = 4;
-    public static final int MOUNTED_ON_COLUMN_INDEX = 5;
+    public static final int MOUNTED_ON_COLUMN_INDEX = 6;
 
     @Override
     public List<Filesystem> getFilesystems(List<String> fsTypes) {
