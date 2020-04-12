@@ -1,7 +1,10 @@
-package hsm.monitors.memory;
+package hsm.memory;
+
+import hsm.units.InformationQuantity;
 
 public class PhysicalMemory extends AbstractMemory {
-    public PhysicalMemory(MemoryQuantity usedQuantity, MemoryQuantity availableQuantity) {
+
+    public PhysicalMemory(InformationQuantity usedQuantity, InformationQuantity availableQuantity) {
         super(usedQuantity, availableQuantity);
     }
 

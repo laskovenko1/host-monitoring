@@ -33,7 +33,7 @@ public final class LinuxCPUMonitor implements CPUMonitor {
                     .map(array -> 100.0d - Double.parseDouble(array[IDLE_COLUMN_INDEX]))
                     .collect(Collectors.toMap(k -> String.valueOf(processorNum.getAndIncrement()),
                             Function.identity(), (k, v) -> k, LinkedHashMap::new));
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalStateException("Error while reading command output. See the inner exception for details", e);
         } finally {
             p.destroy();

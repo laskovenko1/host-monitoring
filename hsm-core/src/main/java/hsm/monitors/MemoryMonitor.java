@@ -1,12 +1,11 @@
 package hsm.monitors;
 
-import hsm.monitors.memory.MemoryUnit;
-import hsm.monitors.memory.PhysicalMemory;
-import hsm.monitors.memory.VirtualMemory;
+import hsm.memory.PhysicalMemory;
+import hsm.memory.VirtualMemory;
 
 public interface MemoryMonitor {
 
-    PhysicalMemory getPhysicalMemory(MemoryUnit unit);
+    PhysicalMemory getPhysicalMemory();
 
-    VirtualMemory getVirtualMemory(MemoryUnit unit);
+    VirtualMemory getVirtualMemory();
 }

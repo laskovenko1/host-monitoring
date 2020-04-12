@@ -1,7 +1,10 @@
-package hsm.monitors.memory;
+package hsm.memory;
+
+import hsm.units.InformationQuantity;
 
 public class VirtualMemory extends AbstractMemory {
-    public VirtualMemory(MemoryQuantity usedQuantity, MemoryQuantity availableQuantity) {
+
+    public VirtualMemory(InformationQuantity usedQuantity, InformationQuantity availableQuantity) {
         super(usedQuantity, availableQuantity);
     }
 
