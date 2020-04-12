@@ -13,7 +13,7 @@ import java.util.Objects;
 
 public final class LinuxMemoryMonitor implements MemoryMonitor {
 
-    public static final String FREE_COMMAND = "free -h";
+    public static final String FREE_COMMAND = "free -b";
     public static final String PHYSICAL_MEMORY_ID = "Mem";
     public static final String VIRTUAL_MEMORY_ID = "Swap";
     public static final int USED_COLUMN_INDEX = 2;
