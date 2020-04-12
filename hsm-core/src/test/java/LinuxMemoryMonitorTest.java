@@ -2,7 +2,6 @@ import hsm.HostStatusMonitor;
 import hsm.Platform;
 import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
-import hsm.monitors.MemoryMonitor;
 import hsm.units.BinaryPrefix;
 import hsm.units.InformationQuantity;
 import org.junit.Assume;
@@ -13,7 +12,7 @@ import static org.junit.Assert.*;
 
 public class LinuxMemoryMonitorTest {
 
-    private static final MemoryMonitor memoryMonitor = new HostStatusMonitor().getMemoryMonitor();
+    private static final HostStatusMonitor hostStatus = new HostStatusMonitor();
 
     @Before
     public void linuxOnly() {
@@ -22,7 +21,7 @@ public class LinuxMemoryMonitorTest {
 
     @Test
     public void getPhysicalMemoryTest() {
-        PhysicalMemory memory = memoryMonitor.getPhysicalMemory();
+        PhysicalMemory memory = hostStatus.getMemoryMonitor().getPhysicalMemory();
         assertNotNull(memory);
 
         InformationQuantity usedSize = memory.getUsed();
@@ -42,7 +41,7 @@ public class LinuxMemoryMonitorTest {
 
     @Test
     public void getVirtualMemoryTest() {
-        VirtualMemory memory = memoryMonitor.getVirtualMemory();
+        VirtualMemory memory = hostStatus.getMemoryMonitor().getVirtualMemory();
     }
 
     private void assertSizeConversion(InformationQuantity size) {
