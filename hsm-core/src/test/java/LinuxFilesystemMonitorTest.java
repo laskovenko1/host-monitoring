@@ -12,14 +12,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class LinuxFilesystemMonitorTest {
-
-    private static final HostStatusMonitor hostStatus = new HostStatusMonitor();
-
-    @Before
-    public void linuxOnly() {
-        Assume.assumeTrue(HostStatusMonitor.getCurrentPlatform().equals(Platform.LINUX));
-    }
+public class LinuxFilesystemMonitorTest extends LinuxAbstractTest {
 
     @Test
     public void getFilesystemsTest() {

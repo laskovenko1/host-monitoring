@@ -9,14 +9,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class LinuxCPUMonitorTest {
-
-    private static final HostStatusMonitor hostStatus = new HostStatusMonitor();
-
-    @Before
-    public void linuxOnly() {
-        Assume.assumeTrue(HostStatusMonitor.getCurrentPlatform().equals(Platform.LINUX));
-    }
+public class LinuxCPUMonitorTest extends LinuxAbstractTest {
 
     @Test
     public void getCpuUsageTest() {

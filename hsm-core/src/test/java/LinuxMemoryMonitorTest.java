@@ -10,14 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class LinuxMemoryMonitorTest {
-
-    private static final HostStatusMonitor hostStatus = new HostStatusMonitor();
-
-    @Before
-    public void linuxOnly() {
-        Assume.assumeTrue(HostStatusMonitor.getCurrentPlatform().equals(Platform.LINUX));
-    }
+public class LinuxMemoryMonitorTest extends LinuxAbstractTest {
 
     @Test
     public void getPhysicalMemoryTest() {

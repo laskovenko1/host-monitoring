@@ -41,9 +41,9 @@ public class InformationQuantity {
 
     @Override
     public String toString() {
-        if (prefix == null) {
+        if (prefix == null)
             return String.format("%dB", bytes);
-        }
+
         return String.format("%d%sB", bytes >> prefix.getPower(), prefix.toString());
     }
 }
