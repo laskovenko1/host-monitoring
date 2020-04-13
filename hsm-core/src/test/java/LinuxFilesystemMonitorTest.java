@@ -24,9 +24,12 @@ public class LinuxFilesystemMonitorTest {
     @Test
     public void getFilesystemsTest() {
         FilesystemMonitor monitor = hostStatus.getFilesystemMonitor();
+
+        assertEquals(monitor.getFilesystems(null), monitor.getFilesystems(new ArrayList<>()));
+
         List<Filesystem> allFs = monitor.getFilesystems(null);
         assertFalse(allFs.isEmpty());
-        assertEquals(allFs.size(), monitor.getFilesystems(new ArrayList<>()).size());
+
         List<Filesystem> wrongType = monitor.getFilesystems(Arrays.asList("TEST", "WRONG TYPE", "!@#$R!FEDF"));
         assertTrue(wrongType.isEmpty());
     }

@@ -45,6 +45,30 @@ public class Filesystem {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+
+        if (!(o instanceof Filesystem))
+            return false;
+
+        Filesystem that = (Filesystem) o;
+        return name.equals(that.name) && type.equals(that.type) && size.equals(that.size) && used.equals(that.used) &&
+                available.equals(that.available) && mountPoint.equals(that.mountPoint);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + type.hashCode();
+        result = 31 * result + size.hashCode();
+        result = 31 * result + used.hashCode();
+        result = 31 * result + available.hashCode();
+        result = 31 * result + mountPoint.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return String.format("filesystem: %s\ttype: %s\tsize: %s\tused size: %s\tavailable size: %s\tmount point: %s",
                 name, type, size.toString(), used.toString(), available.toString(), mountPoint);

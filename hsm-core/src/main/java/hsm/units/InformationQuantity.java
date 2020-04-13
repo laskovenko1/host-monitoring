@@ -23,6 +23,23 @@ public class InformationQuantity {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+
+        if (!(o instanceof InformationQuantity))
+            return false;
+
+        InformationQuantity that = (InformationQuantity) o;
+        return bytes == that.bytes;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(bytes);
+    }
+
+    @Override
     public String toString() {
         if (prefix == null) {
             return String.format("%dB", bytes);
