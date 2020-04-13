@@ -3,7 +3,7 @@ import hsm.Platform;
 import org.junit.Assume;
 import org.junit.Before;
 
-public class LinuxAbstractTest {
+public abstract class LinuxAbstractTest {
 
     protected static final HostStatusMonitor hostStatus = new HostStatusMonitor();
 
