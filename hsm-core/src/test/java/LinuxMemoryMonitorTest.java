@@ -42,6 +42,16 @@ public class LinuxMemoryMonitorTest {
     @Test
     public void getVirtualMemoryTest() {
         VirtualMemory memory = hostStatus.getMemoryMonitor().getVirtualMemory();
+        if (memory == null)
+            return;
+        InformationQuantity used = memory.getUsed();
+        assertNull(used.getPrefix());
+        assertTrue(used.toString().matches("\\d+[B]"));
+        assertSizeConversion(used);
+        InformationQuantity free = memory.getFree();
+        assertNull(free.getPrefix());
+        assertTrue(free.toString().matches("\\d+[B]"));
+        assertSizeConversion(free);
     }
 
     private void assertSizeConversion(InformationQuantity size) {

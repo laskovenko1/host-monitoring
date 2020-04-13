@@ -19,7 +19,8 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
     public static final String PHYSICAL_MEMORY_ID = "Mem";
     public static final String VIRTUAL_MEMORY_ID = "Swap";
     public static final int USED_COLUMN_INDEX = 2;
-    public static final int AVAILABLE_COLUMN_INDEX = 3;
+    public static final int FREE_COLUMN_INDEX = 3;
+    public static final int AVAILABLE_COLUMN_INDEX = 6;
 
     @Override
     public PhysicalMemory getPhysicalMemory() {
@@ -36,8 +37,8 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
             return null;
 
         InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo.get(USED_COLUMN_INDEX)), null);
-        InformationQuantity available = new InformationQuantity(Long.parseLong(memoryInfo.get(AVAILABLE_COLUMN_INDEX)), null);
-        return new VirtualMemory(used, available);
+        InformationQuantity free = new InformationQuantity(Long.parseLong(memoryInfo.get(FREE_COLUMN_INDEX)), null);
+        return new VirtualMemory(used, free);
     }
 
     private List<String> getMemoryInfo(Process process, String memoryTypeId) {
