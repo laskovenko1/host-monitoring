@@ -81,7 +81,7 @@ public class LinuxFilesystemMonitor implements FilesystemMonitor {
         }
         return DF_COMMAND + fsTypes.stream()
                 .map(type -> " --type=" + type)
-                .reduce(String::concat);
+                .reduce("", String::concat);
     }
 
     private List<List<String>> getFilesystemsInfo(Process process) {
