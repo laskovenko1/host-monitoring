@@ -128,11 +128,12 @@ public class Filesystem {
     /**
      * Get string representation of the filesystem.
      *
-     * @return string representation of the filesystem
+     * @return string representation of the filesystem.
+     * Result string: "name type size used_size available_size mount_point".
      */
     @Override
     public String toString() {
-        return String.format("filesystem: %s\ttype: %s\tsize: %s\tused size: %s\tavailable size: %s\tmount point: %s",
+        return String.format("%-15s\t%-10s\t%-15s\t%-15s\t%-15s\t%s\n",
                 name, type, size.toString(), used.toString(), available.toString(), mountPoint);
     }
 }

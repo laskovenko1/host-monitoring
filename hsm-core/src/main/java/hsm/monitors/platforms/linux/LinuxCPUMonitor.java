@@ -93,8 +93,8 @@ public final class LinuxCPUMonitor implements CPUMonitor {
     @Override
     public String toString() {
         Map<String, Double> cpuUsage = getCpuUsage();
-        StringBuilder builder = new StringBuilder("CPU Monitor\nCPU\tUsage\n");
-        cpuUsage.forEach((p, v) -> builder.append(String.format("%s\t%f\n", p, v)));
+        StringBuilder builder = new StringBuilder(String.format("CPU monitor:\n%-3s\t%-5s\n", "CPU", "Usage"));
+        cpuUsage.forEach((p, v) -> builder.append(String.format("%-3s\t%.2f\n", p, v)));
         return builder.toString();
     }
 }
