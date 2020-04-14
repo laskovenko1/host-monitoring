@@ -14,16 +14,51 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Reference implementation of {@link hsm.monitors.FilesystemMonitor} for Linux.
+ *
+ * @author elaskovenko
+ * @since 1.0.0
+ */
 public class LinuxFilesystemMonitor implements FilesystemMonitor {
 
+    /**
+     * Command of df command-line software in UNIX-type systems to be executed by JVM
+     */
     public static final String DF_COMMAND = "df -T";
+    /**
+     * Index of fs name column in df report
+     */
     public static final int FILESYSTEM_COLUMN_INDEX = 0;
+    /**
+     * Index of fs type column in df report
+     */
     public static final int TYPE_COLUMN_INDEX = 1;
+    /**
+     * Index of fs 1K-blocks (size) column in df report
+     */
     public static final int ONE_K_BLOCKS_COLUMN_INDEX = 2;
+    /**
+     * Index of fs used size column in df report
+     */
     public static final int USED_COLUMN_INDEX = 3;
+    /**
+     * Index of fs available size column in df report
+     */
     public static final int AVAILABLE_COLUMN_INDEX = 4;
+    /**
+     * Index of fs mount point column in df report
+     */
     public static final int MOUNTED_ON_COLUMN_INDEX = 6;
 
+    /**
+     * Get real/virtual filesystems used in system by concrete fs types.
+     *
+     * @param fsTypes types of filesystems which all filesystems used in system will be filtered by.
+     *                Empty or null list means no filters will be apply to host's filesystems
+     * @return a list of filtered filesystems
+     * @throws IllegalStateException if there are any errors while processing free command
+     */
     @Override
     public List<Filesystem> getFilesystems(List<String> fsTypes) {
         Process p = CommonUtils.executeCommand(prepareCommand(fsTypes));
