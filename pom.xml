@@ -46,4 +46,13 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <!-- Environment Settings -->
+    <distributionManagement>
+        <repository>
+            <id>github-packages</id>
+            <name>HSM GitHub maven packages</name>
+            <url>https://maven.pkg.github.com/laskovenko1/hsm</url>
+        </repository>
+    </distributionManagement>
 </project>

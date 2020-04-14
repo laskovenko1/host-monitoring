@@ -10,6 +10,15 @@ import org.apache.commons.lang3.SystemUtils;
 
 import java.util.function.Supplier;
 
+/**
+ * The main entry point to HSM.
+ * <p>
+ * This class provides getters for monitors which instantiate the suitable platform-specific implementations of
+ * {@link hsm.monitors.CPUMonitor}, {@link hsm.monitors.MemoryMonitor} and {@link hsm.monitors.FilesystemMonitor}.
+ *
+ * @author elaskovenko
+ * @since 1.0.0
+ */
 public final class HostStatusMonitor {
 
     private static final Platform currentPlatform;
@@ -23,6 +32,11 @@ public final class HostStatusMonitor {
             currentPlatform = Platform.UNKNOWN;
     }
 
+    /**
+     * Get current platform.
+     *
+     * @return current platform
+     */
     public static Platform getCurrentPlatform() {
         return currentPlatform;
     }
@@ -31,14 +45,29 @@ public final class HostStatusMonitor {
     private final Supplier<MemoryMonitor> memoryMonitor = this::createMemoryMonitor;
     private final Supplier<FilesystemMonitor> filesystemMonitor = this::createFilesystemMonitor;
 
+    /**
+     * Get an instance of the suitable platform-specific {@link hsm.monitors.CPUMonitor}.
+     *
+     * @return an instance of CPU monitor
+     */
     public CPUMonitor getCpuMonitor() {
         return cpuMonitor.get();
     }
 
+    /**
+     * Get an instance of the suitable platform-specific {@link hsm.monitors.MemoryMonitor}.
+     *
+     * @return an instance of memory monitor
+     */
     public MemoryMonitor getMemoryMonitor() {
         return memoryMonitor.get();
     }
 
+    /**
+     * Get an instance of the suitable platform-specific {@link hsm.monitors.FilesystemMonitor}.
+     *
+     * @return an instance of filesystem monitor
+     */
     public FilesystemMonitor getFilesystemMonitor() {
         return filesystemMonitor.get();
     }

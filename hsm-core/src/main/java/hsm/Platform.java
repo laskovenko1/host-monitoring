@@ -1,5 +1,24 @@
 package hsm;
 
+/**
+ * Supported operating systems.
+ */
 public enum Platform {
-    WINDOWS, LINUX, UNKNOWN
+
+    /**
+     * Microsoft Windows
+     */
+    WINDOWS,
+
+    /**
+     * Linux
+     *
+     * @since 1.0.0 supported
+     */
+    LINUX,
+
+    /**
+     * Any unspecified system
+     */
+    UNKNOWN
 }

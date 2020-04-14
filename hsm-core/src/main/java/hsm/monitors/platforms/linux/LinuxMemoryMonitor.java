@@ -13,15 +13,46 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Reference implementation of {@link hsm.monitors.MemoryMonitor} for Linux.
+ *
+ * @author elaskovenko
+ * @since 1.0.0
+ */
 public final class LinuxMemoryMonitor implements MemoryMonitor {
 
+    /**
+     * Command of free command-line software in UNIX-type systems to be executed by JVM
+     */
     public static final String FREE_COMMAND = "free -b";
+    /**
+     * Index of physical memory id column in free report
+     */
     public static final String PHYSICAL_MEMORY_ID = "Mem";
+    /**
+     * Index of virtual memory id column in free report
+     */
     public static final String VIRTUAL_MEMORY_ID = "Swap";
+    /**
+     * Index of used memory amount column in free report
+     */
     public static final int USED_COLUMN_INDEX = 2;
+    /**
+     * Index of free memory amount column in free report
+     */
     public static final int FREE_COLUMN_INDEX = 3;
+    /**
+     * Index of available memory amount column in free report
+     */
     public static final int AVAILABLE_COLUMN_INDEX = 6;
 
+    /**
+     * Get physical memory available in the system.
+     *
+     * @return physical memory
+     * @throws IllegalStateException if there are any errors while processing free command
+     * @throws NullPointerException  can't return null due to physical memory always exists in system
+     */
     @Override
     public PhysicalMemory getPhysicalMemory() {
         List<String> memoryInfo = Objects.requireNonNull(getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), PHYSICAL_MEMORY_ID));
@@ -30,6 +61,12 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
         return new PhysicalMemory(used, available);
     }
 
+    /**
+     * Get swap memory in the system.
+     *
+     * @return swap memory. May return null that indicates that there is no swap mem in the system.
+     * @throws IllegalStateException if there are any errors while processing free command
+     */
     @Override
     public VirtualMemory getVirtualMemory() {
         List<String> memoryInfo = getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), VIRTUAL_MEMORY_ID);

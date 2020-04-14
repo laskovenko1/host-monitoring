@@ -12,11 +12,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Reference implementation of {@link hsm.monitors.CPUMonitor} for Linux.
+ *
+ * @author elaskovenko
+ * @since 1.0.0
+ */
 public final class LinuxCPUMonitor implements CPUMonitor {
 
+    /**
+     * Command of mpstat command-line software in UNIX-type systems to be executed by JVM
+     */
     public static final String MPSTAT_COMMAND = "mpstat -P ALL 1 1";
+    /**
+     * Index of idle statistics column in mpstat report
+     */
     public static final int IDLE_COLUMN_INDEX = 11;
 
+    /**
+     * Get the CPU usage statistics for logical CPU processors.
+     *
+     * @return usage statistic by ordinal numbers of logical CPU processors.
+     * The map contains key '-1' for average usage.
+     * @throws IllegalStateException if there are any errors while processing mpstat command
+     */
     @Override
     public Map<String, Double> getCpuUsage() {
         Process p = CommonUtils.executeCommand(MPSTAT_COMMAND);
@@ -40,6 +59,12 @@ public final class LinuxCPUMonitor implements CPUMonitor {
         }
     }
 
+    /**
+     * Get the number of available logical CPU cores.
+     *
+     * @return the number of logical cores
+     * @throws IllegalStateException if there are any errors while processing mpstat command
+     */
     @Override
     public int getNumberOfCores() {
         Process p = CommonUtils.executeCommand(MPSTAT_COMMAND);
@@ -59,6 +84,12 @@ public final class LinuxCPUMonitor implements CPUMonitor {
         }
     }
 
+    /**
+     * Get string representation of CPU monitor
+     *
+     * @return string representation of CPU monitor
+     * @throws IllegalStateException if there are any errors while processing mpstat command
+     */
     @Override
     public String toString() {
         Map<String, Double> cpuUsage = getCpuUsage();
