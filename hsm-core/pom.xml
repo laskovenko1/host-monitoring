@@ -7,7 +7,7 @@
     <parent>
         <artifactId>hsm-parent</artifactId>
         <groupId>com.github.hsm</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>hsm-core</artifactId>
