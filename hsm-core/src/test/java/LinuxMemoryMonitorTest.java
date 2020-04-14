@@ -1,11 +1,7 @@
-import hsm.HostStatusMonitor;
-import hsm.Platform;
 import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
 import hsm.units.BinaryPrefix;
 import hsm.units.InformationQuantity;
-import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

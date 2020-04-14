@@ -1,9 +1,5 @@
-import hsm.HostStatusMonitor;
-import hsm.Platform;
 import hsm.filesystem.Filesystem;
 import hsm.monitors.FilesystemMonitor;
-import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;

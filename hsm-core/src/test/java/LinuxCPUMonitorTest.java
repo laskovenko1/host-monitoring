@@ -1,7 +1,3 @@
-import hsm.HostStatusMonitor;
-import hsm.Platform;
-import org.junit.Assume;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
