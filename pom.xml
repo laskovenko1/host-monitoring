@@ -6,7 +6,7 @@
 
     <groupId>com.github.hsm</groupId>
     <artifactId>hsm-parent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Host status monitor</name>
@@ -23,12 +23,14 @@
 
     <modules>
         <module>hsm-core</module>
+        <module>hsm-client</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven-compiler-plugin.version>2.5.1</maven-compiler-plugin.version>
+        <maven-assembly-plugin.version>3.2.0</maven-assembly-plugin.version>
     </properties>
 
     <build>
@@ -38,10 +40,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven-compiler-plugin.version}</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
