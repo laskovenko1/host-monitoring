@@ -1,0 +1,6 @@
+
+description = 'hsm-client'
+dependencies {
+    compile group: 'commons-cli', name: 'commons-cli', version:'1.4'
+  compile project(':hsm-core')
+}
