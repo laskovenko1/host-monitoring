@@ -1,8 +1,7 @@
 package hsm.client;
 
-import hsm.HostStatusMonitor;
+import hsm.MonitorSupplier;
 import hsm.filesystem.Filesystem;
-import hsm.monitors.CPUMonitor;
 import hsm.monitors.FilesystemMonitor;
 import hsm.monitors.MemoryMonitor;
 import org.apache.commons.cli.*;
@@ -10,7 +9,6 @@ import org.apache.commons.cli.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Application {
@@ -98,10 +96,10 @@ public class Application {
                 fsTypes.addAll(Arrays.asList(fsTypeArgs));
             }
 
-            HostStatusMonitor hsMonitor = new HostStatusMonitor();
+            MonitorSupplier monitorSupplier = new MonitorSupplier();
             while (true) {
                 try {
-                    monitor(hsMonitor, line.hasOption('C'), line.hasOption('M'), monitorVirtual, line.hasOption('F'), fsTypes);
+                    monitor(monitorSupplier, line.hasOption('C'), line.hasOption('M'), monitorVirtual, line.hasOption('F'), fsTypes);
                     Thread.sleep(delayInMillis);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -120,16 +118,16 @@ public class Application {
                 options, "\nEXAMPLE:\njava -jar hsm-client.jar -d 2 -C -M true -F ext4,ext3,fat32", true);
     }
 
-    private static void monitor(HostStatusMonitor hsMonitor,
-                                  boolean cpu,
-                                  boolean memory, boolean virtual,
-                                  boolean filesystem, List<String> fsTypes) {
+    private static void monitor(MonitorSupplier monitorSupplier,
+                                boolean cpu,
+                                boolean memory, boolean virtual,
+                                boolean filesystem, List<String> fsTypes) {
         LocalDateTime curDate = LocalDateTime.now();
-        StringBuilder builder = new StringBuilder(String.format("Host status monitoring: %s\n",curDate.toString()));
+        StringBuilder builder = new StringBuilder(String.format("Host status monitoring: %s\n", curDate.toString()));
         if (cpu)
-            builder.append(hsMonitor.getCpuMonitor()).append('\n');
+            builder.append(monitorSupplier.getCpuMonitor()).append('\n');
         if (memory) {
-            MemoryMonitor memoryMonitor = hsMonitor.getMemoryMonitor();
+            MemoryMonitor memoryMonitor = monitorSupplier.getMemoryMonitor();
             builder.append("Memory monitor:\n");
             builder.append(memoryMonitor.getPhysicalMemory());
             if (virtual)
@@ -137,7 +135,7 @@ public class Application {
             builder.append('\n');
         }
         if (filesystem) {
-            FilesystemMonitor filesystemMonitor = hsMonitor.getFilesystemMonitor();
+            FilesystemMonitor filesystemMonitor = monitorSupplier.getFilesystemMonitor();
             List<Filesystem> filesystems = filesystemMonitor.getFilesystems(fsTypes);
             builder.append("Filesystem monitor:\n");
             builder.append(String.format("%-15s\t%-10s\t%-15s\t%-15s\t%-15s\t%s\n",

@@ -1,16 +1,29 @@
+import hsm.MonitorSupplier;
+import hsm.OperatingSystem;
 import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
+import hsm.monitors.MemoryMonitor;
 import hsm.units.BinaryPrefix;
 import hsm.units.InformationQuantity;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class LinuxMemoryMonitorTest extends LinuxAbstractTest {
+public class LinuxMemoryMonitorTest {
+
+    @Before
+    public void linuxOnly() {
+        Assume.assumeTrue(OperatingSystem.getCurrentOS().equals(OperatingSystem.LINUX));
+    }
 
     @Test
     public void getPhysicalMemoryTest() {
-        PhysicalMemory memory = hostStatus.getMemoryMonitor().getPhysicalMemory();
+        MonitorSupplier monitorSupplier = new MonitorSupplier();
+        MemoryMonitor memoryMonitor = monitorSupplier.getMemoryMonitor();
+
+        PhysicalMemory memory = memoryMonitor.getPhysicalMemory();
         assertNotNull(memory);
 
         InformationQuantity usedSize = memory.getUsed();
@@ -26,21 +39,6 @@ public class LinuxMemoryMonitorTest extends LinuxAbstractTest {
         assertTrue(availableSize.toString().matches("\\d+[B]"));
         assertEquals(availableSize.getBytes(), Long.parseLong(availableSize.toString().replaceAll("\\D", "")));
         assertSizeConversion(availableSize);
-    }
-
-    @Test
-    public void getVirtualMemoryTest() {
-        VirtualMemory memory = hostStatus.getMemoryMonitor().getVirtualMemory();
-        if (memory == null)
-            return;
-        InformationQuantity used = memory.getUsed();
-        assertNull(used.getPrefix());
-        assertTrue(used.toString().matches("\\d+[B]"));
-        assertSizeConversion(used);
-        InformationQuantity free = memory.getFree();
-        assertNull(free.getPrefix());
-        assertTrue(free.toString().matches("\\d+[B]"));
-        assertSizeConversion(free);
     }
 
     private void assertSizeConversion(InformationQuantity size) {
@@ -59,5 +57,23 @@ public class LinuxMemoryMonitorTest extends LinuxAbstractTest {
         size.setPrefix(BinaryPrefix.Pi);
         assertEquals(Math.floorDiv(size.getBytes(), Double.valueOf(Math.pow(2, 50)).longValue()),
                 Long.parseLong(size.toString().replaceAll("\\D", "")));
+    }
+
+    @Test
+    public void getVirtualMemoryTest() {
+        MonitorSupplier monitorSupplier = new MonitorSupplier();
+        MemoryMonitor memoryMonitor = monitorSupplier.getMemoryMonitor();
+
+        VirtualMemory memory = memoryMonitor.getVirtualMemory();
+        if (memory == null)
+            return;
+        InformationQuantity used = memory.getUsed();
+        assertNull(used.getPrefix());
+        assertTrue(used.toString().matches("\\d+[B]"));
+        assertSizeConversion(used);
+        InformationQuantity free = memory.getFree();
+        assertNull(free.getPrefix());
+        assertTrue(free.toString().matches("\\d+[B]"));
+        assertSizeConversion(free);
     }
 }
