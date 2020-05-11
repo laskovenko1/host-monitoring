@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
 
 /**
  * Reference implementation of {@link hsm.monitors.FilesystemMonitor} for Linux.
- *
- * @author elaskovenko
- * @since 1.0.0
  */
 public final class LinuxFilesystemMonitor implements FilesystemMonitor {
 

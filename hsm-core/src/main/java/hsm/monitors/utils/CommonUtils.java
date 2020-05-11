@@ -3,7 +3,7 @@ package hsm.monitors.utils;
 import java.io.IOException;
 
 /**
- * The class for static common utility methods.
+ * Static common utility methods.
  */
 public final class CommonUtils {
 

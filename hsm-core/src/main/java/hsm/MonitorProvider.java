@@ -11,6 +11,10 @@ import java.util.function.Supplier;
 
 import static hsm.system.OperatingSystem.LINUX;
 
+/**
+ * Main entry point to HSM. Provides platform-specific implementations for {@link CPUMonitor},
+ * {@link FilesystemMonitor} and {@link MemoryMonitor}.
+ */
 public class MonitorProvider {
 
     private Supplier<CPUMonitor> cpuMonitor;

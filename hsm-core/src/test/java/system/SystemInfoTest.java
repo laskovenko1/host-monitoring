@@ -1,3 +1,5 @@
+package system;
+
 import hsm.system.OperatingSystem;
 import hsm.system.SystemInfo;
 import org.junit.Test;

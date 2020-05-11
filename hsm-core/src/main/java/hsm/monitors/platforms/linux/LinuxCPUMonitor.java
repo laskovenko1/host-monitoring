@@ -14,9 +14,6 @@ import java.util.stream.Collectors;
 
 /**
  * Reference implementation of {@link hsm.monitors.CPUMonitor} for Linux.
- *
- * @author elaskovenko
- * @since 1.0.0
  */
 public final class LinuxCPUMonitor implements CPUMonitor {
 

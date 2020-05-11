@@ -1,5 +1,9 @@
 package hsm.system;
 
+/**
+ * Exception indicating that host OS is not supported.
+ * See {@link OperatingSystem} for supported OS.
+ */
 public class UnsupportedOperationSystemException extends RuntimeException {
 
     public UnsupportedOperationSystemException(OperatingSystem os) {

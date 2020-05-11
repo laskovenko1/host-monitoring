@@ -1,7 +1,7 @@
 package hsm.units;
 
 /**
- * This class represents quantity of information.
+ * Represents quantity of information.
  * The unit for this quantity is "B" (Byte) with (or without) binary prefix.
  */
 public class InformationQuantity {
@@ -10,19 +10,14 @@ public class InformationQuantity {
     private BinaryPrefix prefix;
 
     /**
-     * Create quantity of information instance.
-     *
-     * @param bytes  value of the quantity in bytes
-     * @param prefix binary prefix. Can be null that means the unit will be without any binary prefix
+     * @param bytes  value of the quantity in bytes.
+     * @param prefix binary prefix or {@code null} if the unit should be without any binary prefix.
      */
     public InformationQuantity(long bytes, BinaryPrefix prefix) {
         this.bytes = bytes;
         this.prefix = prefix;
     }
 
-    /**
-     * Get the value of the quantity in bytes.
-     */
     public long getBytes() {
         return bytes;
     }
@@ -36,10 +31,6 @@ public class InformationQuantity {
     }
 
     /**
-     * Check if other object is equal to the quantity.
-     *
-     * @param o object to be compared with
-     * @return true if the quantity is equal to object or false
      * @implSpec Two quantities are equal when they both have the same byte values
      */
     @Override
@@ -54,11 +45,6 @@ public class InformationQuantity {
         return bytes == that.bytes;
     }
 
-    /**
-     * Overridden {@code Object.hashCode()} method to maintain the general contract.
-     *
-     * @return hash code
-     */
     @Override
     public int hashCode() {
         return Long.hashCode(bytes);
@@ -66,8 +52,8 @@ public class InformationQuantity {
 
     /**
      * Get string representation of the quantity of information.
-     *
-     * @return string representation of the quantity of information. For example, "224KiB"
+     * <p>
+     * For example, "224KiB".
      */
     @Override
     public String toString() {

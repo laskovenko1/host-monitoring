@@ -5,7 +5,7 @@ import hsm.filesystem.Filesystem;
 import java.util.List;
 
 /**
- * This interface represents API for filesystem monitor.
+ * This interface represents API for filesystem monitoring.
  */
 public interface FilesystemMonitor {
 

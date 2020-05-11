@@ -6,26 +6,7 @@ package hsm.units;
  * @see <a href="https://en.wikipedia.org/wiki/Binary_prefix">Wikipedia: Binary Prefix</a>
  */
 public enum BinaryPrefix {
-    /**
-     * Kibi - prefix for 2<sup>10</sup>.
-     */
-    Ki(10),
-    /**
-     * Mebi - prefix for 2<sup>20</sup>.
-     */
-    Mi(20),
-    /**
-     * Gibi - prefix for 2<sup>30</sup>.
-     */
-    Gi(30),
-    /**
-     * Tebi - prefix for 2<sup>40</sup>.
-     */
-    Ti(40),
-    /**
-     * Pebi - prefix for 2<sup>50</sup>.
-     */
-    Pi(50);
+    Ki(10), Mi(20), Gi(30), Ti(40), Pi(50);
 
     private final int power;
 

@@ -1,3 +1,5 @@
+package monitors.platforms.linux;
+
 import hsm.MonitorProvider;
 import hsm.system.OperatingSystem;
 import hsm.system.SystemInfo;

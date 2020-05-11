@@ -3,7 +3,7 @@ package hsm.monitors;
 import java.util.Map;
 
 /**
- * This interface represents API for Central Processing Unit (CPU) monitor of a hosts system.
+ * This interface represents API for Central Processing Unit (CPU) monitoring of a hosts system.
  */
 public interface CPUMonitor {
 

@@ -1,5 +1,8 @@
 package hsm.system;
 
+/**
+ * Utility class for providing host system information.
+ */
 public class SystemInfo {
 
     private final String osName;
@@ -16,6 +19,11 @@ public class SystemInfo {
         }
     }
 
+    /**
+     * Get defined host operating system {@link OperatingSystem}.
+     *
+     * @return host OS or default {@code UNKNOWN} object if OS is undefined.
+     */
     public OperatingSystem getCurrentOS() {
         if (isLinux())
             return OperatingSystem.LINUX;
