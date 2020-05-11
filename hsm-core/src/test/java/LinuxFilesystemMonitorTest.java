@@ -1,5 +1,6 @@
-import hsm.MonitorSupplier;
-import hsm.OperatingSystem;
+import hsm.MonitorProvider;
+import hsm.system.OperatingSystem;
+import hsm.system.SystemInfo;
 import hsm.filesystem.Filesystem;
 import hsm.monitors.FilesystemMonitor;
 import org.junit.Assume;
@@ -16,13 +17,14 @@ public class LinuxFilesystemMonitorTest {
 
     @Before
     public void linuxOnly() {
-        Assume.assumeTrue(OperatingSystem.getCurrentOS().equals(OperatingSystem.LINUX));
+        SystemInfo systemInfo = new SystemInfo();
+        Assume.assumeTrue(systemInfo.getCurrentOS().equals(OperatingSystem.LINUX));
     }
 
     @Test
     public void getFilesystemsTest() {
-        MonitorSupplier monitorSupplier = new MonitorSupplier();
-        FilesystemMonitor filesystemMonitor = monitorSupplier.getFilesystemMonitor();
+        MonitorProvider monitorProvider = new MonitorProvider();
+        FilesystemMonitor filesystemMonitor = monitorProvider.getFilesystemMonitor();
 
         assertEquals(filesystemMonitor.getFilesystems(null), filesystemMonitor.getFilesystems(new ArrayList<>()));
 

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author elaskovenko
  * @since 1.0.0
  */
-public class LinuxFilesystemMonitor implements FilesystemMonitor {
+public final class LinuxFilesystemMonitor implements FilesystemMonitor {
 
     /**
      * Command of df command-line software in UNIX-type systems to be executed by JVM

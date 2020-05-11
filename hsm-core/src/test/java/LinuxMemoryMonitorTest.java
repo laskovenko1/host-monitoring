@@ -1,5 +1,6 @@
-import hsm.MonitorSupplier;
-import hsm.OperatingSystem;
+import hsm.MonitorProvider;
+import hsm.system.OperatingSystem;
+import hsm.system.SystemInfo;
 import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
 import hsm.monitors.MemoryMonitor;
@@ -15,13 +16,14 @@ public class LinuxMemoryMonitorTest {
 
     @Before
     public void linuxOnly() {
-        Assume.assumeTrue(OperatingSystem.getCurrentOS().equals(OperatingSystem.LINUX));
+        SystemInfo systemInfo = new SystemInfo();
+        Assume.assumeTrue(systemInfo.getCurrentOS().equals(OperatingSystem.LINUX));
     }
 
     @Test
     public void getPhysicalMemoryTest() {
-        MonitorSupplier monitorSupplier = new MonitorSupplier();
-        MemoryMonitor memoryMonitor = monitorSupplier.getMemoryMonitor();
+        MonitorProvider monitorProvider = new MonitorProvider();
+        MemoryMonitor memoryMonitor = monitorProvider.getMemoryMonitor();
 
         PhysicalMemory memory = memoryMonitor.getPhysicalMemory();
         assertNotNull(memory);
@@ -61,8 +63,8 @@ public class LinuxMemoryMonitorTest {
 
     @Test
     public void getVirtualMemoryTest() {
-        MonitorSupplier monitorSupplier = new MonitorSupplier();
-        MemoryMonitor memoryMonitor = monitorSupplier.getMemoryMonitor();
+        MonitorProvider monitorProvider = new MonitorProvider();
+        MemoryMonitor memoryMonitor = monitorProvider.getMemoryMonitor();
 
         VirtualMemory memory = memoryMonitor.getVirtualMemory();
         if (memory == null)

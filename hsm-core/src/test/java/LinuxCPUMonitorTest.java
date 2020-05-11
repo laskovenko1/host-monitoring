@@ -1,5 +1,6 @@
-import hsm.MonitorSupplier;
-import hsm.OperatingSystem;
+import hsm.MonitorProvider;
+import hsm.system.OperatingSystem;
+import hsm.system.SystemInfo;
 import hsm.monitors.CPUMonitor;
 import org.junit.Assume;
 import org.junit.Before;
@@ -16,13 +17,14 @@ public class LinuxCPUMonitorTest {
 
     @Before
     public void linuxOnly() {
-        Assume.assumeTrue(OperatingSystem.getCurrentOS().equals(OperatingSystem.LINUX));
+        SystemInfo systemInfo = new SystemInfo();
+        Assume.assumeTrue(systemInfo.getCurrentOS().equals(OperatingSystem.LINUX));
     }
 
     @Test
     public void getCpuUsageTest() {
-        MonitorSupplier monitorSupplier = new MonitorSupplier();
-        CPUMonitor cpuMonitor = monitorSupplier.getCpuMonitor();
+        MonitorProvider monitorProvider = new MonitorProvider();
+        CPUMonitor cpuMonitor = monitorProvider.getCpuMonitor();
 
         Map<String, Double> cpuUsage = cpuMonitor.getCpuUsage();
         assertTrue(cpuUsage.containsKey("-1"));
@@ -32,8 +34,8 @@ public class LinuxCPUMonitorTest {
 
     @Test
     public void getNumberOfCores() {
-        MonitorSupplier monitorSupplier = new MonitorSupplier();
-        CPUMonitor cpuMonitor = monitorSupplier.getCpuMonitor();
+        MonitorProvider monitorProvider = new MonitorProvider();
+        CPUMonitor cpuMonitor = monitorProvider.getCpuMonitor();
 
         assertEquals(availableProcessors, cpuMonitor.getNumberOfCores());
     }

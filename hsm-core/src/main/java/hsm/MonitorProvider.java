@@ -3,23 +3,29 @@ package hsm;
 import hsm.monitors.CPUMonitor;
 import hsm.monitors.FilesystemMonitor;
 import hsm.monitors.MemoryMonitor;
+import hsm.system.OperatingSystem;
+import hsm.system.SystemInfo;
+import hsm.system.UnsupportedOperationSystemException;
 
 import java.util.function.Supplier;
 
-public class MonitorSupplier {
+import static hsm.system.OperatingSystem.LINUX;
+
+public class MonitorProvider {
 
     private Supplier<CPUMonitor> cpuMonitor;
     private Supplier<FilesystemMonitor> filesystemMonitor;
     private Supplier<MemoryMonitor> memoryMonitor;
 
-    public MonitorSupplier() {
-        MonitorFactory factory = createMonitorFactory();
+    public MonitorProvider() {
+        MonitorFactory factory = createPlatformSpecificFactory();
         setMonitorSuppliers(factory);
     }
 
-    private MonitorFactory createMonitorFactory() {
-        OperatingSystem currentOS = OperatingSystem.getCurrentOS();
-        if (currentOS == OperatingSystem.LINUX)
+    private MonitorFactory createPlatformSpecificFactory() {
+        SystemInfo systemInfo = new SystemInfo();
+        OperatingSystem currentOS = systemInfo.getCurrentOS();
+        if (currentOS == LINUX)
             return new LinuxMonitorFactory();
         else
             throw new UnsupportedOperationSystemException(currentOS);

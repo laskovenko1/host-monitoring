@@ -1,6 +1,6 @@
 package hsm.client;
 
-import hsm.MonitorSupplier;
+import hsm.MonitorProvider;
 import hsm.filesystem.Filesystem;
 import hsm.monitors.FilesystemMonitor;
 import hsm.monitors.MemoryMonitor;
@@ -96,10 +96,10 @@ public class Application {
                 fsTypes.addAll(Arrays.asList(fsTypeArgs));
             }
 
-            MonitorSupplier monitorSupplier = new MonitorSupplier();
+            MonitorProvider monitorProvider = new MonitorProvider();
             while (true) {
                 try {
-                    monitor(monitorSupplier, line.hasOption('C'), line.hasOption('M'), monitorVirtual, line.hasOption('F'), fsTypes);
+                    monitor(monitorProvider, line.hasOption('C'), line.hasOption('M'), monitorVirtual, line.hasOption('F'), fsTypes);
                     Thread.sleep(delayInMillis);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -118,16 +118,16 @@ public class Application {
                 options, "\nEXAMPLE:\njava -jar hsm-client.jar -d 2 -C -M true -F ext4,ext3,fat32", true);
     }
 
-    private static void monitor(MonitorSupplier monitorSupplier,
+    private static void monitor(MonitorProvider monitorProvider,
                                 boolean cpu,
                                 boolean memory, boolean virtual,
                                 boolean filesystem, List<String> fsTypes) {
         LocalDateTime curDate = LocalDateTime.now();
         StringBuilder builder = new StringBuilder(String.format("Host status monitoring: %s\n", curDate.toString()));
         if (cpu)
-            builder.append(monitorSupplier.getCpuMonitor()).append('\n');
+            builder.append(monitorProvider.getCpuMonitor()).append('\n');
         if (memory) {
-            MemoryMonitor memoryMonitor = monitorSupplier.getMemoryMonitor();
+            MemoryMonitor memoryMonitor = monitorProvider.getMemoryMonitor();
             builder.append("Memory monitor:\n");
             builder.append(memoryMonitor.getPhysicalMemory());
             if (virtual)
@@ -135,7 +135,7 @@ public class Application {
             builder.append('\n');
         }
         if (filesystem) {
-            FilesystemMonitor filesystemMonitor = monitorSupplier.getFilesystemMonitor();
+            FilesystemMonitor filesystemMonitor = monitorProvider.getFilesystemMonitor();
             List<Filesystem> filesystems = filesystemMonitor.getFilesystems(fsTypes);
             builder.append("Filesystem monitor:\n");
             builder.append(String.format("%-15s\t%-10s\t%-15s\t%-15s\t%-15s\t%s\n",

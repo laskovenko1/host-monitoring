@@ -3,9 +3,6 @@ package hsm.units;
 /**
  * This class represents quantity of information.
  * The unit for this quantity is "B" (Byte) with (or without) binary prefix.
- *
- * @author elaskovenko
- * @since 1.0.0
  */
 public class InformationQuantity {
 
@@ -25,27 +22,15 @@ public class InformationQuantity {
 
     /**
      * Get the value of the quantity in bytes.
-     *
-     * @return a value in bytes
      */
     public long getBytes() {
         return bytes;
     }
 
-    /**
-     * Get the binary prefix of the unit of quantity.
-     *
-     * @return binary prefix
-     */
     public BinaryPrefix getPrefix() {
         return prefix;
     }
 
-    /**
-     * Set the binary prefix of the unit of quantity.
-     *
-     * @param prefix binary prefix
-     */
     public void setPrefix(BinaryPrefix prefix) {
         this.prefix = prefix;
     }
