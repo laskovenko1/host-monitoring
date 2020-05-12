@@ -6,7 +6,7 @@ package hsm.units;
  */
 public class InformationQuantity {
 
-    private long bytes;
+    private final long bytes;
     private BinaryPrefix prefix;
 
     /**
