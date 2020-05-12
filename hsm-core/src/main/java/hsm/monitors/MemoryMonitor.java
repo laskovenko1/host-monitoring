@@ -4,7 +4,7 @@ import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
 
 /**
- * This interface represents API for memory monitoring.
+ * API for memory monitoring.
  */
 public interface MemoryMonitor {
 
@@ -14,7 +14,7 @@ public interface MemoryMonitor {
     PhysicalMemory getPhysicalMemory();
 
     /**
-     * Get virtual memory.
+     * Get virtual memory available to the host's operating system.
      */
     VirtualMemory getVirtualMemory();
 }

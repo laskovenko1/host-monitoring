@@ -1,13 +1,16 @@
 package hsm.monitors.platforms.linux;
 
+import hsm.cpu.CPUCore;
+import hsm.cpu.CentralProcessingUnit;
+import hsm.filesystem.Filesystem;
 import hsm.monitors.CPUMonitor;
 import hsm.monitors.utils.CommonUtils;
+import hsm.units.Percent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,77 +24,50 @@ public final class LinuxCPUMonitor implements CPUMonitor {
      * Command of mpstat command-line software in UNIX-type systems to be executed by JVM
      */
     public static final String MPSTAT_COMMAND = "mpstat -P ALL 1 1";
-    /**
-     * Index of idle statistics column in mpstat report
-     */
+
+    public static final int CPU_COLUMN_INDEX = 1;
     public static final int IDLE_COLUMN_INDEX = 11;
 
     /**
-     * Get the CPU usage statistics for logical CPU processors.
+     * Get {@link CentralProcessingUnit} object.
      *
-     * @return usage statistic by ordinal numbers of logical CPU processors.
-     * The map contains key '-1' for average usage.
      * @throws IllegalStateException if there are any errors while processing mpstat command
      */
     @Override
-    public Map<String, Double> getCpuUsage() {
-        Process p = CommonUtils.executeCommand(MPSTAT_COMMAND);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-            // 1. Filter lines with average data.
-            // 2. Skip table header.
-            // 3. Map lines into usage value.
-            // 4. Convert usage values into a map, where keys are numbers of logical processors (-1 for average usage value).
-            AtomicInteger processorNum = new AtomicInteger(-1);
+    public CentralProcessingUnit getCPU() {
+        Process mpstatProcess = CommonUtils.executeCommand(MPSTAT_COMMAND);
+        List<List<String>> cpuInfoTable = parseCommandOutput(mpstatProcess);
+        List<CPUCore> cores = parseCpuInfoTable(cpuInfoTable);
+        return new CentralProcessingUnit(cores);
+    }
+
+    private List<List<String>> parseCommandOutput(Process mpstatProcess) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(mpstatProcess.getInputStream()))) {
             return reader.lines()
                     .filter(line -> line.contains("Average"))
-                    .skip(1)
+                    .skip(2) // Skipping table header and average CPU statistic line in mpstat report
                     .map(line -> line.replaceAll(",", ".").split("\\s+"))
-                    .map(array -> 100.0d - Double.parseDouble(array[IDLE_COLUMN_INDEX]))
-                    .collect(Collectors.toMap(k -> String.valueOf(processorNum.getAndIncrement()),
-                            Function.identity(), (k, v) -> k, LinkedHashMap::new));
+                    .map(Arrays::asList)
+                    .collect(Collectors.toList());
         } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalStateException("Error while reading command output. See the inner exception for details", e);
         } finally {
-            p.destroy();
+            mpstatProcess.destroy();
         }
     }
 
-    /**
-     * Get the number of available logical CPU cores.
-     *
-     * @return the number of logical cores
-     * @throws IllegalStateException if there are any errors while processing mpstat command
-     */
-    @Override
-    public int getNumberOfCores() {
-        Process p = CommonUtils.executeCommand(MPSTAT_COMMAND);
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-            // 1. Filter lines with average data.
-            // 2. Skip table header and 'ALL' line.
-            // 3. Count lines representing logical processors state.
-            return reader.lines()
-                    .filter(line -> line.contains("Average"))
-                    .skip(2)
-                    .map(line -> 1)
-                    .reduce(0, Integer::sum);
-        } catch (IOException e) {
-            throw new IllegalStateException("Error while reading command output. See the inner exception for details", e);
-        } finally {
-            p.destroy();
+    private List<CPUCore> parseCpuInfoTable(List<List<String>> cpuTable) {
+        List<CPUCore> cores = new ArrayList<>();
+        for (List<String> row : cpuTable) {
+            String number = row.get(CPU_COLUMN_INDEX);
+            String idle = row.get(IDLE_COLUMN_INDEX);
+            CPUCore core = new CPUCore(Integer.parseInt(number), parseUsagePercent(idle));
+            cores.add(core);
         }
+        return cores;
     }
 
-    /**
-     * Get string representation of CPU monitor
-     *
-     * @return string representation of CPU monitor
-     * @throws IllegalStateException if there are any errors while processing mpstat command
-     */
-    @Override
-    public String toString() {
-        Map<String, Double> cpuUsage = getCpuUsage();
-        StringBuilder builder = new StringBuilder(String.format("CPU monitor:\n%-3s\t%-5s\n", "CPU", "Usage"));
-        cpuUsage.forEach((p, v) -> builder.append(String.format("%-3s\t%.2f\n", p, v)));
-        return builder.toString();
+    private Percent parseUsagePercent(String idle) {
+        return new Percent(100.0d - Double.parseDouble(idle));
     }
 }

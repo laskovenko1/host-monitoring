@@ -15,9 +15,6 @@ import java.util.Objects;
 
 /**
  * Reference implementation of {@link hsm.monitors.MemoryMonitor} for Linux.
- *
- * @author elaskovenko
- * @since 1.0.0
  */
 public final class LinuxMemoryMonitor implements MemoryMonitor {
 
@@ -25,25 +22,11 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
      * Command of free command-line software in UNIX-type systems to be executed by JVM
      */
     public static final String FREE_COMMAND = "free -b";
-    /**
-     * Index of physical memory id column in free report
-     */
+
     public static final String PHYSICAL_MEMORY_ID = "Mem";
-    /**
-     * Index of virtual memory id column in free report
-     */
     public static final String VIRTUAL_MEMORY_ID = "Swap";
-    /**
-     * Index of used memory amount column in free report
-     */
     public static final int USED_COLUMN_INDEX = 2;
-    /**
-     * Index of free memory amount column in free report
-     */
     public static final int FREE_COLUMN_INDEX = 3;
-    /**
-     * Index of available memory amount column in free report
-     */
     public static final int AVAILABLE_COLUMN_INDEX = 6;
 
     /**
@@ -55,10 +38,17 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
      */
     @Override
     public PhysicalMemory getPhysicalMemory() {
-        List<String> memoryInfo = Objects.requireNonNull(getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), PHYSICAL_MEMORY_ID));
-        InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo.get(USED_COLUMN_INDEX)), null);
-        InformationQuantity available = new InformationQuantity(Long.parseLong(memoryInfo.get(AVAILABLE_COLUMN_INDEX)), null);
-        return new PhysicalMemory(used, available);
+        Process freeProcess = CommonUtils.executeCommand(FREE_COMMAND);
+        List<String> physicalMemoryInfo = Objects.requireNonNull(parseCommandOutput(freeProcess, PHYSICAL_MEMORY_ID));
+        String memoryUsed = physicalMemoryInfo.get(USED_COLUMN_INDEX);
+        String memoryAvailable = physicalMemoryInfo.get(AVAILABLE_COLUMN_INDEX);
+        return parsePhysicalMemory(memoryUsed, memoryAvailable);
+    }
+
+    private PhysicalMemory parsePhysicalMemory(String usedBytes, String availableBytes) {
+        InformationQuantity usedQuantity = parseMemoryQuantity(usedBytes);
+        InformationQuantity availableQuantity = parseMemoryQuantity(availableBytes);
+        return new PhysicalMemory(usedQuantity, availableQuantity);
     }
 
     /**
@@ -69,20 +59,23 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
      */
     @Override
     public VirtualMemory getVirtualMemory() {
-        List<String> memoryInfo = getMemoryInfo(CommonUtils.executeCommand(FREE_COMMAND), VIRTUAL_MEMORY_ID);
-        if (memoryInfo == null)
+        List<String> virtualMemoryInfo = parseCommandOutput(CommonUtils.executeCommand(FREE_COMMAND), VIRTUAL_MEMORY_ID);
+        if (virtualMemoryInfo == null)
             return null;
 
-        InformationQuantity used = new InformationQuantity(Long.parseLong(memoryInfo.get(USED_COLUMN_INDEX)), null);
-        InformationQuantity free = new InformationQuantity(Long.parseLong(memoryInfo.get(FREE_COLUMN_INDEX)), null);
-        return new VirtualMemory(used, free);
+        String memoryUsed = virtualMemoryInfo.get(USED_COLUMN_INDEX);
+        String memoryFree = virtualMemoryInfo.get(FREE_COLUMN_INDEX);
+        return parseVirtualMemory(memoryUsed, memoryFree);
     }
 
-    private List<String> getMemoryInfo(Process process, String memoryTypeId) {
+    private VirtualMemory parseVirtualMemory(String usedBytes, String availableBytes) {
+        InformationQuantity usedQuantity = parseMemoryQuantity(usedBytes);
+        InformationQuantity availableQuantity = parseMemoryQuantity(availableBytes);
+        return new VirtualMemory(usedQuantity, availableQuantity);
+    }
+
+    private List<String> parseCommandOutput(Process process, String memoryTypeId) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            // 1. Filter lines with (physical/virtual) memory info.
-            // 2. Split line.
-            // 3. Collect to list.
             return reader.lines()
                     .filter(line -> line.contains(memoryTypeId))
                     .map(line -> line.split("\\s+"))
@@ -94,5 +87,9 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
         } finally {
             process.destroy();
         }
+    }
+
+    private InformationQuantity parseMemoryQuantity(String bytes) {
+        return new InformationQuantity(Long.parseLong(bytes), null);
     }
 }

@@ -1,9 +1,11 @@
 package monitors.platforms.linux;
 
 import hsm.MonitorProvider;
+import hsm.cpu.CentralProcessingUnit;
 import hsm.monitors.CPUMonitor;
 import hsm.monitors.platforms.linux.LinuxCPUMonitor;
 import hsm.monitors.utils.CommonUtils;
+import hsm.units.Percent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +27,7 @@ public class LinuxCPUMonitorTest {
     private static final String MPSTAT_COMMAND = "mpstat -P ALL 1 1";
     private static final String MPSTAT_OUTPUT_FILE = "mpstat_output.out";
     private static final int AVAILABLE_PROCESSORS = 12;
+    private static final Percent AVERAGE_USAGE = new Percent(3.56d);
 
     private MonitorProvider monitorProvider;
 
@@ -48,16 +51,8 @@ public class LinuxCPUMonitorTest {
     public void getCpuUsageTest() {
         CPUMonitor cpuMonitor = monitorProvider.getCpuMonitor();
 
-        Map<String, Double> cpuUsage = cpuMonitor.getCpuUsage();
-        assertTrue(cpuUsage.containsKey("-1"));
-        cpuUsage.remove("-1");
-        assertEquals(AVAILABLE_PROCESSORS, cpuUsage.size());
-    }
-
-    @Test
-    public void getNumberOfCores() {
-        CPUMonitor cpuMonitor = monitorProvider.getCpuMonitor();
-
-        assertEquals(AVAILABLE_PROCESSORS, cpuMonitor.getNumberOfCores());
+        CentralProcessingUnit cpu = cpuMonitor.getCPU();
+        assertEquals(AVAILABLE_PROCESSORS, cpu.getCores().size());
+        assertEquals(AVERAGE_USAGE, cpu.getAverageUsage());
     }
 }
