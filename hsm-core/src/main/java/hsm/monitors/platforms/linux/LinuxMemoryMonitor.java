@@ -32,7 +32,6 @@ public final class LinuxMemoryMonitor implements MemoryMonitor {
     /**
      * Get physical memory available in the system.
      *
-     * @return physical memory
      * @throws IllegalStateException if there are any errors while processing free command
      * @throws NullPointerException  can't return null due to physical memory always exists in system
      */
