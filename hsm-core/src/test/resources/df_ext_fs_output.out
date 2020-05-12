@@ -1,0 +1,3 @@
+Filesystem     Type     1K-blocks     Used Available Use% Mounted on
+/dev/nvme0n1p5 ext4     102684472 17961772  79463440  19% /
+/dev/sda1      ext4     491104272  7520468 458567484   2% /home

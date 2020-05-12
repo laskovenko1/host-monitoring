@@ -1,83 +1,85 @@
 package monitors.platforms.linux;
 
 import hsm.MonitorProvider;
-import hsm.system.OperatingSystem;
-import hsm.system.SystemInfo;
 import hsm.memory.PhysicalMemory;
 import hsm.memory.VirtualMemory;
 import hsm.monitors.MemoryMonitor;
-import hsm.units.BinaryPrefix;
+import hsm.monitors.platforms.linux.LinuxMemoryMonitor;
+import hsm.monitors.utils.CommonUtils;
 import hsm.units.InformationQuantity;
-import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(CommonUtils.class)
 public class LinuxMemoryMonitorTest {
 
+    private static final String FREE_COMMAND = "free -b";
+    private static final String FREE_OUTPUT_FILE = "free_output.out";
+    private static final InformationQuantity USED_PHYSICAL_MEMORY = new InformationQuantity(5408968704L, null);
+    private static final InformationQuantity AVAILABLE_PHYSICAL_MEMORY = new InformationQuantity(10720518144L, null);
+    private static final InformationQuantity USED_VIRTUAL_MEMORY = new InformationQuantity(10L, null);
+    private static final InformationQuantity FREE_VIRTUAL_MEMORY = new InformationQuantity(2147479542L, null);
+
+    private MonitorProvider monitorProvider;
+
     @Before
-    public void linuxOnly() {
-        SystemInfo systemInfo = new SystemInfo();
-        Assume.assumeTrue(systemInfo.getCurrentOS().equals(OperatingSystem.LINUX));
+    public void setUpMocks() {
+        mockMonitorProvider();
+        mockCommonUtils();
+    }
+
+    private void mockMonitorProvider() {
+        monitorProvider = Mockito.mock(MonitorProvider.class);
+        when(monitorProvider.getMemoryMonitor()).thenReturn(new LinuxMemoryMonitor());
+    }
+
+    private void mockCommonUtils() {
+        PowerMockito.mockStatic(CommonUtils.class);
+        when(CommonUtils.executeCommand(FREE_COMMAND)).thenReturn(new ProcessStub(FREE_OUTPUT_FILE));
     }
 
     @Test
     public void getPhysicalMemoryTest() {
-        MonitorProvider monitorProvider = new MonitorProvider();
         MemoryMonitor memoryMonitor = monitorProvider.getMemoryMonitor();
 
         PhysicalMemory memory = memoryMonitor.getPhysicalMemory();
         assertNotNull(memory);
 
-        InformationQuantity usedSize = memory.getUsed();
-        assertTrue(usedSize.getBytes() > 0);
-        assertNull(usedSize.getPrefix());
-        assertTrue(usedSize.toString().matches("\\d+[B]"));
-        assertEquals(usedSize.getBytes(), Long.parseLong(usedSize.toString().replaceAll("\\D", "")));
-        assertSizeConversion(usedSize);
+        InformationQuantity memoryUsed = memory.getUsed();
+        assertNull(memoryUsed.getPrefix());
+        assertTrue(memoryUsed.toString().matches("\\d+[B]"));
+        assertEquals(USED_PHYSICAL_MEMORY, memoryUsed);
 
-        InformationQuantity availableSize = memory.getAvailable();
-        assertTrue(availableSize.getBytes() > 0);
-        assertNull(availableSize.getPrefix());
-        assertTrue(availableSize.toString().matches("\\d+[B]"));
-        assertEquals(availableSize.getBytes(), Long.parseLong(availableSize.toString().replaceAll("\\D", "")));
-        assertSizeConversion(availableSize);
-    }
-
-    private void assertSizeConversion(InformationQuantity size) {
-        size.setPrefix(BinaryPrefix.Ki);
-        assertEquals(Math.floorDiv(size.getBytes(), Double.valueOf(Math.pow(2, 10)).longValue()),
-                Long.parseLong(size.toString().replaceAll("\\D", "")));
-        size.setPrefix(BinaryPrefix.Mi);
-        assertEquals(Math.floorDiv(size.getBytes(), Double.valueOf(Math.pow(2, 20)).longValue()),
-                Long.parseLong(size.toString().replaceAll("\\D", "")));
-        size.setPrefix(BinaryPrefix.Gi);
-        assertEquals(Math.floorDiv(size.getBytes(), Double.valueOf(Math.pow(2, 30)).longValue()),
-                Long.parseLong(size.toString().replaceAll("\\D", "")));
-        size.setPrefix(BinaryPrefix.Ti);
-        assertEquals(Math.floorDiv(size.getBytes(), Double.valueOf(Math.pow(2, 40)).longValue()),
-                Long.parseLong(size.toString().replaceAll("\\D", "")));
-        size.setPrefix(BinaryPrefix.Pi);
-        assertEquals(Math.floorDiv(size.getBytes(), Double.valueOf(Math.pow(2, 50)).longValue()),
-                Long.parseLong(size.toString().replaceAll("\\D", "")));
+        InformationQuantity memoryAvailable = memory.getAvailable();
+        assertNull(memoryAvailable.getPrefix());
+        assertTrue(memoryAvailable.toString().matches("\\d+[B]"));
+        assertEquals(AVAILABLE_PHYSICAL_MEMORY, memoryAvailable);
     }
 
     @Test
     public void getVirtualMemoryTest() {
-        MonitorProvider monitorProvider = new MonitorProvider();
         MemoryMonitor memoryMonitor = monitorProvider.getMemoryMonitor();
 
         VirtualMemory memory = memoryMonitor.getVirtualMemory();
-        if (memory == null)
-            return;
-        InformationQuantity used = memory.getUsed();
-        assertNull(used.getPrefix());
-        assertTrue(used.toString().matches("\\d+[B]"));
-        assertSizeConversion(used);
-        InformationQuantity free = memory.getFree();
-        assertNull(free.getPrefix());
-        assertTrue(free.toString().matches("\\d+[B]"));
-        assertSizeConversion(free);
+        assertNotNull(memory);
+
+        InformationQuantity memoryUsed = memory.getUsed();
+        assertNull(memoryUsed.getPrefix());
+        assertTrue(memoryUsed.toString().matches("\\d+[B]"));
+        assertEquals(USED_VIRTUAL_MEMORY, memoryUsed);
+
+        InformationQuantity memoryFree = memory.getFree();
+        assertNull(memoryFree.getPrefix());
+        assertTrue(memoryFree.toString().matches("\\d+[B]"));
+        assertEquals(FREE_VIRTUAL_MEMORY, memoryFree);
     }
 }

@@ -1,0 +1,14 @@
+Filesystem     Type     1K-blocks     Used Available Use% Mounted on
+udev           devtmpfs   8088168        0   8088168   0% /dev
+tmpfs          tmpfs      1623260     2300   1620960   1% /run
+/dev/nvme0n1p5 ext4     102684472 17961772  79463440  19% /
+tmpfs          tmpfs      8116292   105988   8010304   2% /dev/shm
+tmpfs          tmpfs         5120        4      5116   1% /run/lock
+tmpfs          tmpfs      8116292        0   8116292   0% /sys/fs/cgroup
+/dev/loop0     squashfs     96256    96256         0 100% /snap/core/9066
+/dev/loop2     squashfs     56320    56320         0 100% /snap/core18/1705
+/dev/loop5     squashfs     51072    51072         0 100% /snap/snap-store/433
+/dev/loop13    squashfs     56320    56320         0 100% /snap/core18/1754
+/dev/nvme0n1p2 vfat         98304    55621     42683  57% /boot/efi
+/dev/sda1      ext4     491104272  7520468 458567484   2% /home
+tmpfs          tmpfs      1623256       72   1623184   1% /run/user/1000
